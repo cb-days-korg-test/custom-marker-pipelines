@@ -3,6 +3,11 @@ pipeline {
   options { 
     buildDiscarder(logRotator(numToKeepStr: '2'))
   }
+  post {
+    aborted {
+      echo "Why didn't you push my button?"
+    }
+  }
   stages {
     stage('Test') {
       agent { label 'nodejs-app' }
@@ -28,13 +33,14 @@ pipeline {
         branch 'master'
       }
       options {
-        timeout(time: 30, unit: 'SECONDS') 
+        timeout(time: 60, unit: 'SECONDS') 
       }
       input {
-        message "Should we continue?"
+        message "Should we deploy?"
+        submitterParameter "APPROVER"
       }
       steps {
-        echo "Continuing with deployment"
+        echo "Continuing with deployment - approved by ${APPROVER}"
       }
     }
   }
