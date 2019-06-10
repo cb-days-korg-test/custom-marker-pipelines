@@ -4,11 +4,6 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '2'))
     skipDefaultCheckout true
   }
-  post {
-    aborted {
-      echo "Why didn't you push my button?"
-    }
-  }
   stages {
     stage('Test') {
       agent { label 'nodejs-app' }
@@ -19,14 +14,21 @@ pipeline {
           sh 'node --version'
         }
       }
+      post {
+        success {
+          stash name: 'app', includes: '*.js, public/**, views/*, Dockerfile'
+        }
+      }
     }
     stage('Build and Push Image') {
+      agent any
       when {
          beforeAgent true
          branch 'master'
       }
       steps {
          echo "TODO - build and push image"
+         unstash 'app'
       }
     }
     stage('Deploy') {
