@@ -1,5 +1,5 @@
 library 'cd-accel'
-def testPodYaml = libraryResource 'podtemplates/nodejs-app/web-test-pod.yml'
+def testPodYaml = libraryResource 'podtemplates/nodejs-app/web-test-pod.yaml'
 
 pipeline {
   agent none
